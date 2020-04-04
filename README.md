@@ -75,6 +75,36 @@ d_pc = xrv.datasets.PC_Dataset(imgpath="path to image folder")
 d_covid19 = xrv.datasets.COVID19_Dataset() # specify imgpath and csvpath for the dataset
 ```
 
+## inference
+
+Download one of the following datasets for evaluation:
+
+NIH: https://academictorrents.com/details/e615d3aebce373f1dc8bd9d11064da55bdadede0
+
+Kaggle: https://academictorrents.com/details/95588a735c9ae4d123f3ca408e56570409bcf2a9
+
+NIH_Google: https://pubs.rsna.org/doi/10.1148/radiol.2019191293
+
+PC: https://academictorrents.com/details/e0aeda79626589f31e8bf016660da801f5add88e
+
+CheX: https://stanfordmlgroup.github.io/competitions/chexpert/
+
+MIMIC: https://physionet.org/content/mimic-cxr-jpg/2.0.0/
+
+Open_i: https://academictorrents.com/details/5a3a439df24931f410fac269b87b050203d9467d
+
+COVID-19: https://github.com/ieee8023/covid-chestxray-dataset
+
+Inference Notebook: test.ipynb
+
+Example:
+
+To infer on the PadChest dataset:
+
+`d_pc = xrv.datasets.PC_Dataset(imgpath="data/PC/images-224")`
+
+
+
 ## dataset tools
 
 relabel_dataset will align labels to have the same order as the pathologies argument.
