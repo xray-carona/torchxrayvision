@@ -72,7 +72,7 @@ class DenseNet(nn.Module):
     """
 
     def __init__(self, growth_rate=32, block_config=(6, 12, 24, 16), num_init_features=64, bn_size=4,
-                 drop_rate=0, num_classes=18, in_channels=1, weights=None, progress=True):
+                 drop_rate=0, num_classes=18, in_channels=1, weights_dir=None, progress=True):
 
         super(DenseNet, self).__init__()            
         
@@ -112,25 +112,25 @@ class DenseNet(nn.Module):
             elif isinstance(m, nn.Linear):
                 nn.init.constant_(m.bias, 0)
                 
-        if weights != None:
+        # if weights != None:
+        #
+        #     if not weights in model_urls.keys():
+        #         raise Exception("weights value must be in {}".format(list(model_urls.keys())))
             
-            if not weights in model_urls.keys():
-                raise Exception("weights value must be in {}".format(list(model_urls.keys())))
-            
-            url = model_urls[weights]
-            weights_filename = os.path.basename(url)
-            weights_storage_folder = os.path.expanduser(os.path.join("~",".torchxrayvision","models_data"))
-            weights_filename_local = os.path.expanduser(os.path.join(weights_storage_folder,weights_filename))
+            # url = model_urls[weights]
+            # weights_filename = os.path.basename(url)
+            # weights_storage_folder = os.path.expanduser(os.path.join("~",".torchxrayvision","models_data"))
+        weights_filename_local = weights_dir +"model.pt"
               
-            if not os.path.isfile(weights_filename_local):
-                print("Downloading weights...")
-                print("If this fails you can run `wget {} -O {}`".format(url, weights_filename_local))
-                pathlib.Path(weights_storage_folder).mkdir(parents=True, exist_ok=True)
-                download(url, weights_filename_local)
+            # if not os.path.isfile(weights_filename_local):
+            #     print("Downloading weights...")
+            #     print("If this fails you can run `wget {} -O {}`".format(url, weights_filename_local))
+            #     pathlib.Path(weights_storage_folder).mkdir(parents=True, exist_ok=True)
+            #     download(url, weights_filename_local)
 
-            savedmodel = torch.load(weights_filename_local, map_location='cpu')
-            self.load_state_dict(savedmodel.state_dict())
-            return
+        savedmodel = torch.load(weights_filename_local, map_location='cpu')
+        self.load_state_dict(savedmodel.state_dict())
+        return
 
     def forward(self, x):
         features = self.features(x)
@@ -152,26 +152,26 @@ def get_densenet_params(arch):
         ret = dict(growth_rate=32, block_config=(6, 12, 24, 16), num_init_features=64)
     return ret
 
-                                      
-import sys
-import requests
-
-# from here https://sumit-ghosh.com/articles/python-download-progress-bar/
-def download(url, filename):
-    with open(filename, 'wb') as f:
-        response = requests.get(url, stream=True)
-        total = response.headers.get('content-length')
-
-        if total is None:
-            f.write(response.content)
-        else:
-            downloaded = 0
-            total = int(total)
-            for data in response.iter_content(chunk_size=max(int(total/1000), 1024*1024)):
-                downloaded += len(data)
-                f.write(data)
-                done = int(50*downloaded/total)
-                sys.stdout.write('\r[{}{}]'.format('█' * done, '.' * (50-done)))
-                sys.stdout.flush()
-    sys.stdout.write('\n')
-                                      
+#
+# import sys
+# import requests
+#
+# # from here https://sumit-ghosh.com/articles/python-download-progress-bar/
+# def download(url, filename):
+#     with open(filename, 'wb') as f:
+#         response = requests.get(url, stream=True)
+#         total = response.headers.get('content-length')
+#
+#         if total is None:
+#             f.write(response.content)
+#         else:
+#             downloaded = 0
+#             total = int(total)
+#             for data in response.iter_content(chunk_size=max(int(total/1000), 1024*1024)):
+#                 downloaded += len(data)
+#                 f.write(data)
+#                 done = int(50*downloaded/total)
+#                 sys.stdout.write('\r[{}{}]'.format('█' * done, '.' * (50-done)))
+#                 sys.stdout.flush()
+#     sys.stdout.write('\n')
+#
